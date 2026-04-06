@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MyClinic.Application.DTOs;
 using MyClinic.Application.Interfaces;
 using MyClinic.Domain.Entities;
+using MyClinic.Domain.Enums;
 using MyClinic.Domain.Interfaces;
 
 namespace MyClinic.Application.Services
@@ -30,10 +31,9 @@ namespace MyClinic.Application.Services
                 AppointmentDate = dto.AppointmentDate,
                 DoctorName = dto.DoctorName,
                 Message = dto.Message
-
             };
-            await _repository.AddAsync(appointment);
 
+            await _repository.AddAsync(appointment);
         }
 
         public async Task UpdateAsync(int id, AppointmentDto dto)
@@ -45,18 +45,16 @@ namespace MyClinic.Application.Services
                 throw new Exception("Appointment not found");
             }
 
-                appointment.Name = dto.Name;
-                appointment.Email = dto.Email;
-                appointment.PhoneNumber = dto.PhoneNumber;
-                appointment.Department = dto.Department;
-                appointment.AppointmentDate = dto.AppointmentDate;
-                appointment.DoctorName = dto.DoctorName;
-                appointment.Message = dto.Message;
+            appointment.Name = dto.Name;
+            appointment.Email = dto.Email;
+            appointment.PhoneNumber = dto.PhoneNumber;
+            appointment.Department = dto.Department;
+            appointment.AppointmentDate = dto.AppointmentDate;
+            appointment.DoctorName = dto.DoctorName;
+            appointment.Message = dto.Message;
 
-                await _repository.UpdateAsync(appointment);
-            
+            await _repository.UpdateAsync(appointment);
         }
-
 
         public async Task DeleteAsync(int id)
         {
@@ -66,28 +64,28 @@ namespace MyClinic.Application.Services
             {
                 throw new Exception("Appointment not found");
             }
-            await _repository.DeleteAsync(id);
 
+            await _repository.DeleteAsync(id);
         }
 
         public async Task<IEnumerable<AppointmentDto>> GetAllAsync()
         {
             var appointments = await _repository.GetAllAsync();
-            
 
             var result = appointments.Select(a => new AppointmentDto
             {
-                Name = a.Name,
-                Email = a.Email,
-                PhoneNumber = a.PhoneNumber,
+                Id = a.Id,
+                Name = a.Name ?? "",
+                Email = a.Email ?? "",
+                PhoneNumber = a.PhoneNumber ?? "",
                 Department = a.Department,
                 AppointmentDate = a.AppointmentDate,
-                DoctorName = a.DoctorName,
-                Message = a.Message
+                DoctorName = a.DoctorName ?? "",
+                Message = a.Message ?? ""
             });
+
             return result;
         }
-
 
         public async Task<AppointmentDto?> GetByIdAsync(int id)
         {
@@ -97,18 +95,20 @@ namespace MyClinic.Application.Services
             {
                 return null;
             }
+
             var result = new AppointmentDto
             {
-                Name = appointment.Name,
-                Email = appointment.Email,
-                PhoneNumber = appointment.PhoneNumber,
+                Id = appointment.Id,
+                Name = appointment.Name ?? "",
+                Email = appointment.Email ?? "",
+                PhoneNumber = appointment.PhoneNumber ?? "",
                 Department = appointment.Department,
                 AppointmentDate = appointment.AppointmentDate,
-                DoctorName = appointment.DoctorName,
-                Message = appointment.Message
+                DoctorName = appointment.DoctorName ?? "",
+                Message = appointment.Message ?? ""
             };
+
             return result;
         }
-
     }
 }

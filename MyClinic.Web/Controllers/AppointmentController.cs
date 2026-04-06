@@ -13,31 +13,39 @@ namespace MyClinic.Web.Controllers
             _appointmentService = appointmentService;
         }
 
+        // GET
         [HttpGet]
         public IActionResult Appointment_Create()
         {
             return View();
         }
 
+        // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Appointment_Create(AppointmentDto dto)
         {
+            // ✅ STEP 1: Model Validation Check
             if (!ModelState.IsValid)
             {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine("❌ MODEL ERROR: " + error.ErrorMessage);
-                }
+                // 🔍 Debugging: All errors combine karo
+                var errors = ModelState.Values
+                                       .SelectMany(v => v.Errors)
+                                       .Select(e => e.ErrorMessage)
+                                       .ToList();
 
-                return View(dto);
+                TempData["Error"] = string.Join(" | ", errors);
+
+                return View(dto); // ❗ important: same data back
             }
 
+            // ✅ STEP 2: Save via Service Layer
             await _appointmentService.CreateAsync(dto);
 
+            // ✅ STEP 3: Success Message + Redirect (PRG Pattern)
             TempData["Success"] = "Your appointment has been scheduled successfully.";
+
             return RedirectToAction(nameof(Appointment_Create));
         }
-
     }
 }
