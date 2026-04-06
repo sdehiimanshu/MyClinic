@@ -7,20 +7,17 @@ using MyClinic.Domain.Common;
 
 namespace MyClinic.Domain.Enums
 {
-    public class DepartmentType:BaseEntity
+    public enum DepartmentType
     {
-        public enum Department
-        {
-            GeneralMedicine,
-            Pediatrics,
-            Dermatology,
-            Cardiology,
-            Orthopedics,
-            Neurology,
-            Gynecology,
-            Psychiatry,
-            ENT,
-            Ophthalmology
-        }
+        GeneralMedicine,
+        Pediatrics,
+        Dermatology,
+        Cardiology,
+        Orthopedics,
+        Neurology,
+        Gynecology,
+        Psychiatry,
+        ENT,
+        Ophthalmology
     }
 }
